@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import puppeteer from 'puppeteer';
 
-
-
 var linkGenerator: string;
 
 async function printPDF() {
@@ -31,15 +29,21 @@ export default function handler(
             cidade,
             nomeRecebedor,
             numeroCpfRg } = req.body;
-        console.log(req.body)
-        linkGenerator = process.env.PROCESS_PUBLIC_SITE!
+
+        linkGenerator = `${process.env.PROCESS_PUBLIC_SITE!}?numeroRecibo=${numeroRecibo}
+        &valor=${valor}
+        &nome=${nome}
+        &descricao=${descricao}
+        &cidade=${cidade}
+        &nomeRecebedor=${nomeRecebedor}
+        &numeroCpfRg=${numeroCpfRg}`
 
 
 
         /* return pdf */
         printPDF().then((pdf) => {
             res.setHeader('Content-Type', 'application/pdf');
-            /* res.setHeader('Content-Disposition', 'attachment; filename=recibo.pdf'); */ //download PDF
+            res.setHeader('Content-Disposition', 'attachment; filename=recibo.pdf');  /* //download PDF */
             res.send(pdf)
         });
     }
