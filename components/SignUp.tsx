@@ -13,6 +13,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { saveAs } from "file-saver";
+import { useRouter } from "next/router";
+
+const axios = require("axios").default;
 
 function Copyright(props: any) {
   return (
@@ -45,20 +49,7 @@ const theme = createTheme();
 export default function SignUp() {
   const [dados, getDados] = useState({});
 
-  useEffect(() => {
-    // POST request using fetch inside useEffect React hook
-    console.log(JSON.stringify(dados));
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dados),
-    };
-    fetch("http://localhost:3000/api/pdf", requestOptions)
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-
-    // empty dependency array means this effect will only run once (like componentDidMount in classes)
-  }, [dados]);
+  const router = useRouter();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -72,7 +63,17 @@ export default function SignUp() {
       nomeRecebedor: data.get("nomeRecebedor"),
       numeroCpfRg: data.get("numeroCpfRg"),
     });
+    sendJson(JSON.stringify(dados));
+  };
 
+  const sendJson = async (dados: any) => {
+    axios.post("http://localhost:3000/api/pdf").then(async (res: any) => {
+      console.log(res.data);
+      var blob = new Blob([res.data], {
+        type: "application/pdf",
+      });
+      saveAs(blob, "teste.pdf");
+    });
   };
 
   return (

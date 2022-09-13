@@ -11,7 +11,6 @@ async function printPDF() {
     await page.emulateMediaType('screen')
     const pdf = await page.pdf({ format: 'A4' });
     await browser.close();
-    console.log(`link do pdf ( ${linkGenerator} )`);
     return pdf;
 }
 
@@ -29,22 +28,27 @@ export default function handler(
             cidade,
             nomeRecebedor,
             numeroCpfRg } = req.body;
-
+        console.log(req.body)
         linkGenerator = `${process.env.PROCESS_PUBLIC_SITE!}?numeroRecibo=${numeroRecibo}
-        &valor=${valor}
-        &nome=${nome}
-        &descricao=${descricao}
-        &cidade=${cidade}
-        &nomeRecebedor=${nomeRecebedor}
-        &numeroCpfRg=${numeroCpfRg}`
+        &valor=${valor || 1}
+        &nome=${nome || 1}
+        &descricao=${descricao || 1}
+        &cidade=${cidade || 1}
+        &nomeRecebedor=${nomeRecebedor || 1}
+        &numeroCpfRg=${numeroCpfRg || 1}`
 
 
 
         /* return pdf */
         printPDF().then((pdf) => {
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'attachment; filename=recibo.pdf');  /* //download PDF */
-            res.send(pdf)
+            console.log(pdf)
+            return res.status(200).setHeader("Content-disposition",
+                "attachment; filename=" +
+                "Example.pdf")
+                .setHeader('Content-Type', 'application/pdf')
+                .setHeader('Content-Length', 10000)
+                .setHeader('responseType', 'arraybuffer')
+                .send(pdf)
         });
     }
 
