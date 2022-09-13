@@ -4,6 +4,7 @@ import puppeteer from 'puppeteer';
 
 
 async function printPDF() {
+    console.log("printando PDF")
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto("https://www.google.com/", { waitUntil: "networkidle0" });
@@ -23,6 +24,7 @@ export default function handler(
     //#testPdf
     /* return pdf */
     printPDF().then((pdf) => {
+        console.log(pdf)
         res.status(200).send(pdf);
     });
 }
