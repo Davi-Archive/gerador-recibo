@@ -1,13 +1,14 @@
-import { link } from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import puppeteer from 'puppeteer';
 
 
-var linkGenerator:string;
+
+var linkGenerator: string;
 
 async function printPDF() {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
+
     await page.goto(linkGenerator, { waitUntil: "networkidle0" });
     await page.emulateMediaType('screen')
     const pdf = await page.pdf({ format: 'A4' });
@@ -16,14 +17,24 @@ async function printPDF() {
     return pdf;
 }
 
+
 export default function handler(
     req: NextApiRequest,
     res: NextApiResponse<any>
 ) {
     if (req.method === 'POST') {
-        const { nome } = req.body;
+        const {
+            numeroRecibo,
+            valor,
+            nome,
+            descricao,
+            cidade,
+            nomeRecebedor,
+            numeroCpfRg } = req.body;
         console.log(req.body)
-        linkGenerator = `https://www.google.com/${nome}`
+        linkGenerator = process.env.PROCESS_PUBLIC_SITE!
+
+
 
         /* return pdf */
         printPDF().then((pdf) => {
