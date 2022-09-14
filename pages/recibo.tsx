@@ -1,11 +1,10 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/app.module.scss";
 import jsPDF from "jspdf";
 import pdfMake from "pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import htmlToPdfmake from "html-to-pdfmake";
-import reciboModelo from '../assets/recibo.jpg'
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/app.module.scss";
 
 
 export function Recibo () {
@@ -36,8 +35,8 @@ export function Recibo () {
        image: "snow",
      },
      {
-       text: "Text over image",
-       absolutePosition: { x: 100, y: 50 },
+       text: "This is a header (whole paragraph uses the same header style)\n\n",
+       absolutePosition: { x: 100, y: 150 },
      },
      {
        image: "strawberries",
@@ -63,14 +62,10 @@ export function Recibo () {
 
   function printDocument() {
     const doc = new jsPDF();
-
-    //get html
-    const pdfTable = document.getElementById("divToPrint");
     //html to pdf format
-    var html = htmlToPdfmake(pdfTable!.innerHTML);
-
-    const documentDefinition = { content: html };
+    //@ts-ignore
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    //@ts-ignore
     pdfMake.createPdf(docDefinition).open();
   }
 
