@@ -9,7 +9,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Crie seu Recibo Online!</title>
         <meta name="description" content="Gere seu Recibo!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
