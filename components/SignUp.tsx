@@ -48,6 +48,7 @@ const theme = createTheme();
 
 export default function SignUp() {
   const [dados, getDados] = useState({});
+  const [link, setLink] = useState("link here");
 
   const router = useRouter();
 
@@ -67,19 +68,21 @@ export default function SignUp() {
   };
 
   const sendJson = async (dados: any) => {
-    axios.post("http://localhost:3000/api/pdf").then(async (res: any) => {
-      console.log(res.data);
-      var blob = new Blob([res.data], {
-        type: "application/pdf",
+    axios
+      .post("./api/pdf", dados)
+      .then(() => axios.get("./api/pdf", { responseType: "blob" }))
+      .then((res: any) => {
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        console.log(pdfBlob);
+        saveAs(pdfBlob, "newPdf.pdf");
       });
-      saveAs(blob, "teste.pdf");
-    });
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        {link}
         <Box
           sx={{
             marginTop: 8,
